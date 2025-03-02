@@ -44,6 +44,27 @@ class TaskCrudController extends CrudController
         CRUD::column('status')->label('Status');
         CRUD::column('created_at')->label('Created At');
 
+        CRUD::addColumn([
+            'name' => 'task_owner',
+            'label' => 'Task Owner',
+            'type' => 'text',
+            'value' => function ($entry) {
+                return $entry->user_id ? 'User' : 'Guest';
+            },
+        ]);
+
+        $user = backpack_auth()->user();
+        $sessionId = session()->getId();
+
+        if( $user->id != 0){
+            $this->crud->addClause('where', function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                      ->orWhere('user_id', 0); // Гостевые таски (user_id = 0)
+            });
+        } else {
+            $this->crud->addClause('where', 'session_id', $sessionId);
+        }
+
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
@@ -66,6 +87,25 @@ class TaskCrudController extends CrudController
             'in_progress' => 'In Progress',
             'done' => 'Done',
         ]);
+
+        if(auth('backpack')->id() != 0 ){
+            $this->crud->addField([
+                'name' => 'user_id',
+                'type' => 'hidden',
+                'default' => auth('backpack')->id(),
+            ]);
+        } else {
+            $this->crud->addField([
+                'name' => 'user_id',
+                'type' => 'hidden',
+                'default' => 0,
+            ]);
+            $this->crud->addField([
+                'name' => 'session_id',
+                'type' => 'hidden',
+                'default' => session()->getId(),
+            ]);
+        }
 
         /**
          * Fields can be defined using the fluent syntax:
@@ -95,10 +135,25 @@ class TaskCrudController extends CrudController
             'default'     => 'new', // Default value
         ]);
 
-        $this->crud->addField([
-            'name' => 'user_id',
-            'type' => 'hidden',
-            'default' => auth('backpack')->id(),
-        ]);
+        if(auth('backpack')->id() != 0 ){
+            $this->crud->addField([
+                'name' => 'user_id',
+                'type' => 'hidden',
+                'default' => auth('backpack')->id(),
+            ]);
+        } else {
+            $this->crud->addField([
+                'name' => 'user_id',
+                'type' => 'hidden',
+                'default' => 0,
+            ]);
+            $this->crud->addField([
+                'name' => 'session_id',
+                'type' => 'hidden',
+                'default' => session()->getId(),
+            ]);
+        }
+
+
     }
 }

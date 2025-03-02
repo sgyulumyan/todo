@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\GuestUser;
 
 class CheckIfAdmin
 {
@@ -28,6 +29,9 @@ class CheckIfAdmin
     private function checkIfUserIsAdmin($user)
     {
         // return ($user->is_admin == 1);
+        if (!$user) {
+            return true; // Разрешаем доступ гостям
+        }
         return true;
     }
 
@@ -56,12 +60,12 @@ class CheckIfAdmin
     public function handle($request, Closure $next)
     {
         if (backpack_auth()->guest()) {
-            return $this->respondToUnauthorizedRequest($request);
+            backpack_auth()->setUser(new \App\Models\GuestUser());
         }
 
-        if (! $this->checkIfUserIsAdmin(backpack_user())) {
-            return $this->respondToUnauthorizedRequest($request);
-        }
+        // if (! $this->checkIfUserIsAdmin(backpack_user())) {
+        //     return $this->respondToUnauthorizedRequest($request);
+        // }
 
         return $next($request);
     }
