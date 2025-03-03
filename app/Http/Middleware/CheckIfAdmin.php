@@ -28,9 +28,8 @@ class CheckIfAdmin
      */
     private function checkIfUserIsAdmin($user)
     {
-        // return ($user->is_admin == 1);
         if (!$user) {
-            return true; // Разрешаем доступ гостям
+            return true;
         }
         return true;
     }
@@ -62,11 +61,6 @@ class CheckIfAdmin
         if (backpack_auth()->guest()) {
             backpack_auth()->setUser(new \App\Models\GuestUser());
         }
-
-        // if (! $this->checkIfUserIsAdmin(backpack_user())) {
-        //     return $this->respondToUnauthorizedRequest($request);
-        // }
-
         return $next($request);
     }
 }

@@ -9,5 +9,5 @@ Route::get('/', function () {
 });
 
 Route::post('/guest-login', function () {
-    return redirect(backpack_url('dashboard')); // <--- Меняем redirect на backpack_url
+    return redirect(backpack_url('dashboard'));
 })->name('guest.login');

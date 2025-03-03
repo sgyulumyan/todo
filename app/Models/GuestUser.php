@@ -36,7 +36,7 @@ class GuestUser implements Authenticatable, ArrayAccess
 
     public function setRememberToken($value)
     {
-        // Ничего не делаем
+        
     }
 
     public function getRememberTokenName()
@@ -49,19 +49,16 @@ class GuestUser implements Authenticatable, ArrayAccess
         return 'password';
     }
 
-    // Позволяет обращаться к атрибутам как к свойствам объекта
     public function __get($key)
     {
         return $this->attributes[$key] ?? null;
     }
 
-    // Добавляем поддержку метода getAttribute()
     public function getAttribute($key)
     {
         return $this->attributes[$key] ?? null;
     }
 
-    // Реализация интерфейса ArrayAccess
     public function offsetExists($offset): bool
     {
         return isset($this->attributes[$offset]);
