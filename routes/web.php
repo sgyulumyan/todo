@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\TaskCrudController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
@@ -12,5 +11,3 @@ Route::get('/', function () {
 Route::post('/guest-login', function () {
     return redirect(backpack_url('dashboard'));
 })->name('guest.login');
-
-Route::get('test', [TaskCrudController::class, 'test'])->name('test');
