@@ -156,9 +156,4 @@ class TaskCrudController extends CrudController
 
 
     }
-
-    public function test()
-    {
-        dd('test');
-    }
 }
